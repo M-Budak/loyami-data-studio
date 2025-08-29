@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loyami – Yönetim Paneli</title>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      /* Tema değişkenleri */
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #101010;
+      --muted:#6b7280;
+      --primary:#e14b3b;      /* QR Okut butonu */
+      --accent:#111;          /* başlık metin */
+      --radius:16px;
+      --shadow: 0 10px 25px rgba(16,24,40,.06), 0 2px 6px rgba(16,24,40,.06);
+      --ring: 0 0 0 3px rgba(225,75,59,.18);
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0b0b0d; --card:#141416; --text:#f7f7f7; --muted:#9aa0a6; --shadow:none; --ring:0 0 0 3px rgba(225,75,59,.28);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background:linear-gradient(180deg,#fff 0%, var(--bg) 30%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+    }
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: clamp(16px, 3vw, 28px);
+      padding-bottom: max(28px, env(safe-area-inset-bottom));
+    }
+
+    /* Üst kısım */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      margin-bottom: 18px;
+    }
+    .hello{
+      font-weight:800; letter-spacing:-.02em; margin:0;
+      font-size: clamp(22px, 3.6vw, 32px);
+      color:var(--accent);
+    }
+    .avatar{
+      width:40px; height:40px; border-radius:999px; display:grid; place-items:center;
+      background:linear-gradient(135deg,#f2f4f7,#e9eefc);
+      color:#475467;
+      box-shadow:var(--shadow);
+      flex-shrink:0;
+    }
+    .avatar svg{width:22px;height:22px;opacity:.9}
+
+    /* Kart grid */
+    .grid{
+      display:grid; gap:16px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .span-6{grid-column: span 6}
+    .span-12{grid-column: span 12}
+    @media (max-width: 760px){
+      .span-6{grid-column: span 12}
+    }
+
+    .card{
+      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); position:relative;
+      padding: 18px 18px 16px; transition: transform .15s ease, box-shadow .15s ease, background .2s;
+    }
+    .card:hover{ transform: translateY(-2px); box-shadow:0 16px 36px rgba(16,24,40,.10), 0 3px 10px rgba(16,24,40,.08); }
+    .card h3{margin:0 0 22px 0; font-size:18px; font-weight:700; letter-spacing:-.01em}
+    .card .stat{ display:flex; align-items:baseline; gap:8px; }
+    .num{
+      font-size: clamp(34px, 6vw, 44px); font-weight:800; letter-spacing:-.02em;
+    }
+    .sub{ margin-top:10px; color:var(--muted); font-size:14px }
+    .badge{
+      position:absolute; right:14px; top:14px;
+      width:36px; height:36px; border-radius:10px;
+      display:grid; place-items:center;
+      background:#f3f4f6;
+    }
+    .badge svg{ width:20px; height:20px }
+
+    .badge.qr{ background:#eaf7f1 }
+    .badge.star{ background:#fff6e5 }
+    .badge.gift{ background:#f3ecff }
+    .badge.user{ background:#e6f0ff }
+
+    /* CTA kartı */
+    .cta{
+      display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+      padding:20px;
+    }
+    .cta h4{ font-size:20px; margin:0; letter-spacing:-.01em }
+    .btn{
+      appearance:none; border:0; border-radius:14px; padding:12px 18px; font-weight:700;
+      background:var(--primary); color:#fff; cursor:pointer; transition: transform .05s ease, box-shadow .15s ease;
+      box-shadow:var(--shadow);
+    }
+    .btn:active{ transform: translateY(1px) }
+    .btn:focus-visible{ outline:none; box-shadow:var(--ring) }
+
+    /* Ayarlar */
+    .section-title{
+      margin: 22px 4px 12px; color:var(--accent); font-size:22px; font-weight:800; letter-spacing:-.01em;
+    }
+    .list{ display:grid; gap:12px }
+    .row{
+      background:var(--card); border-radius:16px; box-shadow:var(--shadow); padding:16px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+    }
+    .row .left{ display:flex; align-items:center; gap:12px }
+    .icon{
+      width:42px; height:42px; border-radius:12px; display:grid; place-items:center; background:#f3f4f6; flex-shrink:0;
+    }
+    .icon svg{ width:22px; height:22px }
+    .chev{
+      width:24px; height:24px; opacity:.5; flex-shrink:0;
+    }
+
+    /* Küçük görsel iyileştirme */
+    .muted{color:var(--muted)}
+    .tag{ font-weight:600; font-size:12px; padding:4px 8px; border-radius:999px; background:#f4f4f5; }
+
+    /* Safe-area alt çizgi (mobil) */
+    .safe{ height: max(6px, env(safe-area-inset-bottom)); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Üst -->
+    <div class="topbar">
+      <h1 class="hello">Merhaba, Çağdaş!</h1>
+      <div class="avatar" aria-label="Profil">
+        <!-- user icon -->
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z" fill="currentColor"/><path d="M4 20a8 8 0 0 1 16 0Z" fill="currentColor"/></svg>
+      </div>
+    </div>
+
+    <!-- İstatistik kartları -->
+    <div class="grid" style="margin-bottom:12px">
+      <!-- Alışveriş -->
+      <a class="card span-6" href="alisveris.html" style="text-decoration:none; color:inherit;">
+        <div class="badge qr" title="QR">
+          <!-- qr icon -->
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm2 2v4h4V5zM13 3h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zM17 13h-4v4h2v2h2v-6zm-4 8h6v-2h-2v-2h-2v-2h-2zM19 13h2v2h-2z"/></svg>
+        </div>
+        <h3>Alışveriş</h3>
+        <div class="stat"><div class="num">624</div></div>
+        <div class="sub">Toplam işlem</div>
+      </a>
+
+      <!-- Yıldız -->
+      <a class="card span-6" href="yildiz.html" style="text-decoration:none; color:inherit;">
+        <div class="badge star" title="Yıldız">
+          <!-- star -->
+          <svg viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2.5 9.3 8.1 3.2 9l4.6 4.2-1.1 6.1L12 16.9l5.3 2.4-1.1-6.1 4.6-4.2-6.1-.9Z"/></svg>
+        </div>
+        <h3>Yıldız</h3>
+        <div class="stat"><div class="num">1.1 B</div></div>
+        <div class="sub">Kazanılan Yıldızlar</div>
+      </a>
+
+      <!-- Hediye -->
+      <a class="card span-6" href="hediye.html" style="text-decoration:none; color:inherit;">
+        <div class="badge gift" title="Hediye">
+          <!-- gift -->
+          <svg viewBox="0 0 24 24" fill="#8b5cf6"><path d="M20 7h-2.6A3.5 3.5 0 1 0 12 4.5 3.5 3.5 0 1 0 6.6 7H4v4h16zm-9.4-2a1.5 1.5 0 1 1-1.5 1.5H8a1.5 1.5 0 0 1 2.6-1.5ZM16 6.5A1.5 1.5 0 0 1 14.5 8H14a1.5 1.5 0 1 1 2-1.5Z"/><path d="M4 12h7v8H4zm9 0h7v8h-7z"/></svg>
+        </div>
+        <h3>Hediye</h3>
+        <div class="stat"><div class="num">315</div></div>
+        <div class="sub">Harcanan Yıldızlar</div>
+      </a>
+
+      <!-- Kullanıcı -->
+      <article class="card span-6">
+        <div class="badge user" title="Kullanıcı">
+          <!-- user -->
+          <svg viewBox="0 0 24 24" fill="#3b82f6"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z"/><path d="M4 20a8 8 0 0 1 16 0Z"/></svg>
+        </div>
+        <h3>Kullanıcı</h3>
+        <div class="stat"><div class="num">236</div></div>
+        <div class="sub">Müşteri Sayısı</div>
+      </article>
+
+      <!-- CTA -->
+      <article class="card cta span-12">
+        <h4>Loyami ile İşlem Yapın</h4>
+        <button class="btn" type="button">QR Okut</button>
+      </article>
+    </div>
+
+    <!-- Ayarlar -->
+    <div class="section-title">Uygulama Ayarları</div>
+    <div class="list">
+      <div class="row">
+        <div class="left">
+          <div class="icon">
+            <!-- pencil-square -->
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          </div>
+          <div>
+            <div style="font-weight:700">Ürün Ekle / Çıkar</div>
+            <div class="muted" style="font-size:13px">Menü ve ürün yönetimi</div>
+          </div>
+        </div>
+        <svg class="chev" viewBox="0 0 24 24" fill="currentColor"><path d="m9 6 6 6-6 6"/></svg>
+      </div>
+
+      <div class="row">
+        <div class="left">
+          <div class="icon">
+            <!-- hash -->
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3 7.5 9H3v2h4L6.5 15H3v2h3.9L6 21h2l.9-4H14l-.9 4h2l.9-4H21v-2h-4l.5-4H21V9h-3.9L18 5h-2l-.9 4H10l.9-4H9Zm.5 6h5l-.5 4h-5l.5-4Z"/></svg>
+          </div>
+          <div>
+            <div style="font-weight:700">Etiketleri Düzenle</div>
+            <div class="muted" style="font-size:13px">Müşteri etiketleri, segmentler</div>
+          </div>
+        </div>
+        <svg class="chev" viewBox="0 0 24 24" fill="currentColor"><path d="m9 6 6 6-6 6"/></svg>
+      </div>
+    </div>
+
+    <div class="safe"></div>
+  </div>
+</body>
+</html>

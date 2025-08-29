@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yıldız Raporu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f6f7fb;
+            --card: #fff;
+            --text: #101010;
+            --accent: #e14b3b;
+            --radius: 18px;
+            --shadow: 0 8px 32px rgba(16,24,40,.10), 0 2px 6px rgba(16,24,40,.06);
+        }
+        html, body {
+            height: 100%;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #fff 0%, var(--bg) 40%);
+            font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+            color: var(--text);
+        }
+        .container {
+            width: 100vw;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+        .card {
+            background: var(--card);
+            border-radius: 0;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 0 0 18px 0;
+            letter-spacing: -0.01em;
+            text-align: center;
+            padding: 24px 0 10px 0;
+            background: var(--card);
+        }
+        .responsive-iframe {
+            flex: 1 1 auto;
+            width: 100%;
+            height: 80vh;
+            min-height: 400px;
+            background: #e9eefc;
+            border-radius: 0;
+            box-shadow: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .responsive-iframe iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            border-radius: 0;
+            position: absolute;
+            top: 0; left: 0;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.2rem;
+                padding: 14px 0 8px 0;
+            }
+            .responsive-iframe {
+                height: 75vh;
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Yıldız İşlem Raporu</h1>
+            <div class="responsive-iframe">
+                <iframe src="https://lookerstudio.google.com/embed/reporting/c863c17b-5a7d-4bd1-a833-e37865667849/page/p_icbyqogrvd"
+                    allowfullscreen
+                    sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
